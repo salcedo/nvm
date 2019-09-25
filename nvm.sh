@@ -2031,7 +2031,7 @@ nvm_install_source() {
 
   local tar
   tar='tar'
-  if [ "${NVM_OS}" = 'aix' || "${NVM_OS}" = 'openbsd' ]; then
+  if [ "${NVM_OS}" = 'aix' ] || [ "${NVM_OS}" = 'openbsd' ]; then
     tar='gtar'
   fi
 
