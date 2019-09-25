@@ -1584,6 +1584,7 @@ nvm_get_os() {
     Darwin\ *) NVM_OS=darwin ;;
     SunOS\ *) NVM_OS=sunos ;;
     FreeBSD\ *) NVM_OS=freebsd ;;
+    OpenBSD\ *) NVM_OS=openbsd ;;
     AIX\ *) NVM_OS=aix ;;
   esac
   nvm_echo "${NVM_OS-}"
@@ -1740,7 +1741,7 @@ nvm_install_binary() {
   fi
   local tar
   tar='tar'
-  if [ "${NVM_OS}" = 'aix' ]; then
+  if [ "${NVM_OS}" = 'aix' || "${NVM_OS}" = 'openbsd' ]; then
     tar='gtar'
   fi
   if (
@@ -1927,7 +1928,7 @@ nvm_get_make_jobs() {
     "_linux")
       NVM_CPU_CORES="$(nvm_grep -c -E '^processor.+: [0-9]+' /proc/cpuinfo)"
     ;;
-    "_freebsd" | "_darwin")
+    "_freebsd" | "_openbsd" | "_darwin")
       NVM_CPU_CORES="$(sysctl -n hw.ncpu)"
     ;;
     "_sunos")
@@ -2008,6 +2009,10 @@ nvm_install_source() {
       make='gmake'
       MAKE_CXX="CC=${CC:-cc} CXX=${CXX:-c++}"
     ;;
+    'openbsd')
+      make='gmake'
+      MAKE_CXX="CC=${CC:-cc} CXX=${CXX:-c++}"
+    ;;
     'darwin')
       MAKE_CXX="CC=${CC:-cc} CXX=${CXX:-c++}"
     ;;
@@ -2030,7 +2035,7 @@ nvm_install_source() {
 
   local tar
   tar='tar'
-  if [ "${NVM_OS}" = 'aix' ]; then
+  if [ "${NVM_OS}" = 'aix' || "${NVM_OS}" = 'openbsd' ]; then
     tar='gtar'
   fi
 
@@ -2715,10 +2720,10 @@ nvm() {
         EXIT_CODE=0
       else
 
-        if [ "_${NVM_OS}" = "_freebsd" ]; then
+        if [ "_${NVM_OS}" = "_freebsd" || "_${NVM_OS}" = "_openbsd" ]; then
           # node.js and io.js do not have a FreeBSD binary
           nobinary=1
-          nvm_err "Currently, there is no binary for FreeBSD"
+          nvm_err "Currently, there is no binary for FreeBSD or OpenBSD"
         elif [ "_${NVM_OS}" = "_sunos" ]; then
           # Not all node/io.js versions have a Solaris binary
           if ! nvm_has_solaris_binary "${VERSION}"; then
