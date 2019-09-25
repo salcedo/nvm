@@ -1741,7 +1741,7 @@ nvm_install_binary() {
   fi
   local tar
   tar='tar'
-  if [ "${NVM_OS}" = 'aix' || "${NVM_OS}" = 'openbsd' ]; then
+  if [ "${NVM_OS}" = 'aix' ] || [ "${NVM_OS}" = 'openbsd' ]; then
     tar='gtar'
   fi
   if (
@@ -2005,11 +2005,7 @@ nvm_install_source() {
   make='make'
   local MAKE_CXX
   case "${NVM_OS}" in
-    'freebsd')
-      make='gmake'
-      MAKE_CXX="CC=${CC:-cc} CXX=${CXX:-c++}"
-    ;;
-    'openbsd')
+    'freebsd' | 'openbsd')
       make='gmake'
       MAKE_CXX="CC=${CC:-cc} CXX=${CXX:-c++}"
     ;;
@@ -2720,7 +2716,7 @@ nvm() {
         EXIT_CODE=0
       else
 
-        if [ "_${NVM_OS}" = "_freebsd" || "_${NVM_OS}" = "_openbsd" ]; then
+        if [ "_${NVM_OS}" = "_freebsd" ] || [ "_${NVM_OS}" = "_openbsd" ]; then
           # node.js and io.js do not have a FreeBSD binary
           nobinary=1
           nvm_err "Currently, there is no binary for FreeBSD or OpenBSD"
